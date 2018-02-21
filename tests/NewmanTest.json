@@ -35,10 +35,10 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "example.om",
+					"raw": "example.com",
 					"host": [
 						"example",
-						"om"
+						"com"
 					]
 				},
 				"description": ""
