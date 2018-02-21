@@ -1,0 +1,49 @@
+{
+	"info": {
+		"name": "NewmanTest",
+		"_postman_id": "4c426dd6-051d-253c-18c1-9d23efd66a0a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "NewmanTest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"tests[\"status code is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"// var jsonData = JSON.parse(responseBody);",
+							"",
+							"// tests[\"List should be name TODO'\"] = jsonData.name ===   \"TODO\";",
+							"// tests[\"List should not be closed'\"] = jsonData.closed ===   false;",
+							"// tests[\"Board id should match given idBoard\"] = jsonData.idBoard ===   postman.getEnvironmentVariable(\"boardId\");",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "example.com",
+					"host": [
+						"example",
+						"com"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
