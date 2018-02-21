@@ -1,0 +1,591 @@
+{
+	"info": {
+		"name": "Trello",
+		"_postman_id": "0eccb0e4-a757-b2c0-c888-f225dd8af23b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Trello Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"tests[\"status code is 200\"] = responseCode.code === 200;",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"your board name hsould be 'boardName' \"] = jsonData.name ===   postman.getEnvironmentVariable(\"boardName\");",
+							"",
+							"postman.setEnvironmentVariable(\"boardId\", jsonData.id )"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"//var boardName = \"My board \" + parseInt(Math.random()*10000);",
+							"",
+							"",
+							"// pm.environment.set(\"boardName\",  \"My board \" + parseInt(Math.random()*10000));",
+							"",
+							"// Use currentBoardNumber to store the board number",
+							"var currentBoardNumber = postman.getEnvironmentVariable(\"currentBoardNumber\");",
+							" ",
+							"// Check if currentBoardNumber is already defined",
+							"if (currentBoardNumber) {",
+							"    currentBoardNumber++; // increment",
+							"} else {",
+							"    currentBoardNumber = 1; // start from 1",
+							"}",
+							" ",
+							" ",
+							"var boardName = \"My board \" + currentBoardNumber;",
+							" ",
+							"// Set the boardName for the request",
+							"postman.setEnvironmentVariable(\"boardName\", boardName);",
+							" ",
+							"// Set the currentBoardNumber for future requests",
+							"postman.setEnvironmentVariable(\"currentBoardNumber\", currentBoardNumber);",
+							"",
+							"",
+							"// Clear environment variables",
+							"// postman.clearEnvironmentVariable(\"boardName\");",
+							"// postman.clearEnvironmentVariable(\"boardId\");",
+							"// postman.clearEnvironmentVariable(\"todoListId\");",
+							"// postman.clearEnvironmentVariable(\"doneListId\");",
+							"// postman.clearEnvironmentVariable(\"cardId\");",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.trello.com/1/boards/?name={{boardName}}&key={{trelloKey}}&token={{trelloToken}}&defaultLists=false",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"boards",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{boardName}}",
+							"equals": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						},
+						{
+							"key": "defaultLists",
+							"value": "false",
+							"equals": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": true,
+							"disabled": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Create TODO List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"tests[\"status code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"The board list should be TODO\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"TODO\");",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"List should be name TODO'\"] = jsonData.name ===   \"TODO\";",
+							"tests[\"List should not be closed'\"] = jsonData.closed ===   false;",
+							"tests[\"Board id should match given idBoard\"] = jsonData.idBoard ===   postman.getEnvironmentVariable(\"boardId\");",
+							"",
+							"",
+							"pm.environment.set(\"todoListId\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.trello.com/1/lists?name=TODO&idBoard={{boardId}}&key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "TODO",
+							"equals": true
+						},
+						{
+							"key": "idBoard",
+							"value": "{{boardId}}",
+							"equals": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Create Done List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"tests[\"status code is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"List should be name Done\"] = jsonData.name ===   \"DONE\";",
+							"tests[\"List should not be closed'\"] = jsonData.closed ===   false;",
+							"tests[\"Board id should match given idBoard\"] = jsonData.idBoard ===   postman.getEnvironmentVariable(\"boardId\");",
+							"",
+							"//postman.clearGlobalVariable(\"boardId\")"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.trello.com/1/lists?name=DONE&idBoard={{boardId}}&key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "DONE",
+							"equals": true
+						},
+						{
+							"key": "idBoard",
+							"value": "{{boardId}}",
+							"equals": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Create Learn Postman Card in TODO List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"tests[\"status code is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"List should be name 'Learn Postman'\"] = jsonData.name ===   \"Learn Postman\";",
+							"tests[\"Should have given idList\"] = jsonData.idList ===   postman.getEnvironmentVariable(\"todoListId\");",
+							"tests[\"Board id should match given idBoard\"] = jsonData.idBoard ===   postman.getEnvironmentVariable(\"boardId\");",
+							"",
+							"tests[\"Should have nested property value\"] = jsonData.badges.attachmentsByType.trello.board === 0;",
+							"",
+							"",
+							"",
+							"",
+							"pm.environment.set(\"cardId\", jsonData.id) ;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.trello.com/1/cards?idList={{todoListId}}&key={{trelloKey}}&token={{trelloToken}}&name=Learn Postman",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "idList",
+							"value": "{{todoListId}}",
+							"equals": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						},
+						{
+							"key": "name",
+							"value": "Learn Postman",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Move Card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"tests[\"status code is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"List should be name 'Learn Postman'\"] = jsonData.name ===   \"Learn Postman\";",
+							"tests[\"Should have given idList\"] = jsonData.idList ===   postman.getEnvironmentVariable(\"todoListId\");",
+							"",
+							"tests[\"Board id should match given idBoard\"] = jsonData.idBoard ===   postman.getEnvironmentVariable(\"boardId\");",
+							"",
+							"tests[\"Should have nested property value\"] = jsonData.badges.attachmentsByType.trello.board === 0;",
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.trello.com/1/cards/:id?idList={{todoListId}}&key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"cards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "idList",
+							"value": "{{todoListId}}",
+							"equals": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{cardId}}"
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// pm.test(\"Status code is 404\", function () {",
+							"//     pm.response.to.have.status(404);",
+							"// });"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.trello.com/1/boards/:id?key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"boards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "nasri",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						},
+						{
+							"key": "defaultLists",
+							"value": "false",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": true,
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{boardId}}"
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Get a board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"// tests[\"status code is 400\"] = responseCode.code === 400;",
+							"",
+							"",
+							"// Clear environment variables ",
+							"",
+							"postman.clearEnvironmentVariable(\"boardName\");",
+							"postman.clearEnvironmentVariable(\"boardId\");",
+							"postman.clearEnvironmentVariable(\"todoListId\");",
+							"postman.clearEnvironmentVariable(\"doneListId\");",
+							"postman.clearEnvironmentVariable(\"cardId\");",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.trello.com/1/boards/:id?key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"boards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "nasri",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}",
+							"equals": true
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}",
+							"equals": true
+						},
+						{
+							"key": "defaultLists",
+							"value": "false",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": true,
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{boardId}}"
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		}
+	]
+}
